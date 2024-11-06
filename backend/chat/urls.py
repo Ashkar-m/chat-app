@@ -7,10 +7,14 @@ from rest_framework_simplejwt.views import(
 
 from .views import (
     MyTokenObtainPairView,
+    createRoom,
+    room,
 )
 
 urlpatterns = [
     path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh_view'),
+    path('room/', createRoom, name="createRoom"),
+    path('room/<str:name>/<str:password>', room, name="room"),
 ]
 

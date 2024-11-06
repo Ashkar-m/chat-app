@@ -24,3 +24,50 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createRoom(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        try:
+            Room.objects.get(name = data['name'], password = data['password'])
+            return JsonResponse({"status": 404})
+        except:
+            Room.objects.create(name = data['name'], password = data['password'])
+            return JsonResponse({"status": 200})
+
+
+@api_view(['GET', 'POST', 'DELETE'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def room(request, name, password):
+    if request.mehtod == "GET":
+        room = Room.objects.get(name=name, password=password)
+        messages = reversed(room.room.all())
+        serializer = ChatSerializer(messages, many=True)
+        return Response(serializer.data)
+    
+    if request.method == "DELETE":
+        room = Room.objects.get(name=name, password=password)
+        room.delete()
+    
+    if request.method == "POST":
+        print(request.POST, request.data, sep="\n")
+        room = Room.objects.get(name=name, password=password)
+        user = request.user
+        try:
+            message = request.data.get('message')
+        except:
+            message = ""
+        try:
+            image = request.data.get('image')
+            print(image)
+            if image == "undefined":
+                image = None
+        except:
+            image = None
+        chat = Chat.objects.create(user=user, room=room, message=message, image=image)
+        chat.save()
+        return JsonResponse({"status": "201"})
