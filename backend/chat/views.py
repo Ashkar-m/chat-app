@@ -71,3 +71,18 @@ def room(request, name, password):
         chat = Chat.objects.create(user=user, room=room, message=message, image=image)
         chat.save()
         return JsonResponse({"status": "201"})
+
+
+@api_view(['POST'])
+def createUser(request):
+    if request.mehtod == "POST":
+        data = json.loads(request.body)
+        username = data['username']
+        password = data['password']
+
+        try:
+            User.objects.get(username=username)
+            return JsonResponse({"status" : "405", "ok" : False})
+        except:
+            User.objects.create_user(username=username, password=password)
+            return JsonResponse({"status" : "200", "ok" : True})
