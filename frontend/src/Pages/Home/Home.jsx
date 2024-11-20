@@ -1,8 +1,7 @@
 import React, { useContext } from 'react'
-import AuthContext from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 
-import { baseUrl } from '../../context/AuthContext'
+import AuthContext, { baseUrl } from '../../context/AuthContext'
 
 const HomePage = () => {
     const { authTokens } = useContext(AuthContext)

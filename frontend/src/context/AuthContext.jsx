@@ -1,61 +1,92 @@
-import { createContext, useState, useEffect } from "react"
-import jwt_decode from "jwt-decode";
-import { useNavigate } from "react-router-dom"
 
-const AuthContext = createContext()
-export const baseUrl = "http://127.0.0.1:8000/"
+import { createContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+const AuthContext = createContext();
+export const baseUrl = "http://127.0.0.1:8000/";
 
 export default AuthContext;
 
-export const AuthProvider = ({Children}) => {
-    let [authTokens, setAuthTokens] = useState(()=> localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null)
-    let [user, setUser] = useState(()=> localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')) : null)
-    let [loading, setLoading] = useState(true)
+export const AuthProvider = ({ Children }) => {
+    let [authTokens, setAuthTokens] = useState(() =>
+        localStorage.getItem("authTokens")
+            ? JSON.parse(localStorage.getItem("authTokens"))
+            : null
+    );
+
+    let [user, setUser] = useState(() =>
+        localStorage.getItem("authTokens")
+            ? decodeJWT(JSON.parse(localStorage.getItem("authTokens")).access)
+            : null
+    );
+
+    let [loading, setLoading] = useState(true);
 
     const navigateTo = useNavigate();
+
+    // Function to manually decode a JWT
+    const decodeJWT = (token) => {
+        try {
+            const base64Url = token.split(".")[1];
+            const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+            const jsonPayload = decodeURIComponent(
+                atob(base64)
+                    .split("")
+                    .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+                    .join("")
+            );
+            return JSON.parse(jsonPayload);
+        } catch (error) {
+            console.error("Invalid token", error);
+            return null;
+        }
+    };
 
     let loginUser = async (e) => {
         e.preventDefault();
         let response = await fetch(`${baseUrl}/chat/api/token/`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type':'application/json'
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify({ 'username':e.target.username.value, 'password':e.target.password.value })
-        })
-        let data = await response.json()
+            body: JSON.stringify({
+                username: e.target.username.value,
+                password: e.target.password.value,
+            }),
+        });
+        let data = await response.json();
 
         if (response.status === 200) {
-            setAuthTokens(data)
-            setUser(jwt_decode(data.access))
-            localStorage.setItem('authTokens', JSON.stringify(data))
-            navigateTo('/')
+            setAuthTokens(data);
+            setUser(decodeJWT(data.access));
+            localStorage.setItem("authTokens", JSON.stringify(data));
+            navigateTo("/");
         } else {
             console.log(response);
         }
-    }
+    };
 
     let logoutUser = () => {
         setAuthTokens(null);
-        setUser(null)
-        localStorage.removeItem('authTokens')
-    }
+        setUser(null);
+        localStorage.removeItem("authTokens");
+    };
 
     let updateToken = async () => {
         let response = await fetch(`${baseUrl}/chat/api/token/refresh/`, {
-            method:'POST',
-            headers:{
-                'Content-Type':'application/json'
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify({'refresh':authTokens?.refresh})
-        })
+            body: JSON.stringify({ refresh: authTokens?.refresh }),
+        });
 
         let data = await response.json();
-        
-        if (response.status == 200) {
-            setAuthTokens(data)
-            setUser(jwt_decode(data.access))
-            localStorage.setItem('authTokens',JSON.stringify(data));
+
+        if (response.status === 200) {
+            setAuthTokens(data);
+            setUser(decodeJWT(data.access));
+            localStorage.setItem("authTokens", JSON.stringify(data));
         } else {
             logoutUser();
         }
@@ -63,35 +94,33 @@ export const AuthProvider = ({Children}) => {
         if (loading) {
             setLoading(false);
         }
-    }
+    };
 
     let contextData = {
-        user:user,
-        authTokens:authTokens,
-        loginUser:loginUser,
-        logoutUser:logoutUser,
-    }
+        user: user,
+        authTokens: authTokens,
+        loginUser: loginUser,
+        logoutUser: logoutUser,
+    };
 
-    useEffect(()=> {
+    useEffect(() => {
         if (loading) {
             updateToken();
         }
 
-        let fourMinutes = 1000 * 60 * 4
+        let fourMinutes = 1000 * 60 * 4;
 
-        let interval = setInterval( ()=> {
+        let interval = setInterval(() => {
             if (authTokens) {
-                updateToken()
+                updateToken();
             }
-        }, fourMinutes)
-        return ()=> clearInterval(interval);
-
-    }, [authTokens, loading])
-
+        }, fourMinutes);
+        return () => clearInterval(interval);
+    }, [authTokens, loading]);
 
     return (
         <AuthContext.Provider value={contextData}>
             {loading ? null : Children}
         </AuthContext.Provider>
-    )
-}
+    );
+};
