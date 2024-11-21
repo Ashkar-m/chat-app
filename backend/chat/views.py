@@ -43,7 +43,7 @@ def createRoom(request):
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def room(request, name, password):
-    if request.mehtod == "GET":
+    if request.method == "GET":
         room = Room.objects.get(name=name, password=password)
         messages = reversed(room.room.all())
         serializer = ChatSerializer(messages, many=True)
@@ -75,7 +75,7 @@ def room(request, name, password):
 
 @api_view(['POST'])
 def createUser(request):
-    if request.mehtod == "POST":
+    if request.method == "POST":
         data = json.loads(request.body)
         username = data['username']
         password = data['password']

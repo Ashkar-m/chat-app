@@ -7,7 +7,7 @@ const Register = () => {
     const Submit = async (e) => {
         e.preventDefault()
         const data = {'username':e.target.username.value, 'password':e.target.password.value}
-        await fetch(`${baseUrl}/user/create`, {
+        await fetch(`${baseUrl}chat/user/create/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -17,6 +17,6 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh_view'),
     path('room/', createRoom, name="createRoom"),
     path('room/<str:name>/<str:password>', room, name="room"),
-    path('user/create', createUser, name='create-user'),
+    path('user/create/', createUser, name='create-user'),
 ]
 
