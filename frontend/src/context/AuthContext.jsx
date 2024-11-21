@@ -7,7 +7,8 @@ export const baseUrl = "http://127.0.0.1:8000/";
 
 export default AuthContext;
 
-export const AuthProvider = ({ Children }) => {
+export const AuthProvider = ({ children }) => {
+    const navigateTo = useNavigate();
     let [authTokens, setAuthTokens] = useState(() =>
         localStorage.getItem("authTokens")
             ? JSON.parse(localStorage.getItem("authTokens"))
@@ -21,8 +22,6 @@ export const AuthProvider = ({ Children }) => {
     );
 
     let [loading, setLoading] = useState(true);
-
-    const navigateTo = useNavigate();
 
     // Function to manually decode a JWT
     const decodeJWT = (token) => {
@@ -44,7 +43,7 @@ export const AuthProvider = ({ Children }) => {
 
     let loginUser = async (e) => {
         e.preventDefault();
-        let response = await fetch(`${baseUrl}/chat/api/token/`, {
+        let response = await fetch(`${baseUrl}chat/api/token/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -73,10 +72,11 @@ export const AuthProvider = ({ Children }) => {
     };
 
     let updateToken = async () => {
-        let response = await fetch(`${baseUrl}/chat/api/token/refresh/`, {
-            method: "POST",
+        let response = await fetch(`${baseUrl}chat/api/token/refresh/`, {
+            method: 'POST',
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${authTokens?.refresh}`,
             },
             body: JSON.stringify({ refresh: authTokens?.refresh }),
         });
@@ -120,7 +120,7 @@ export const AuthProvider = ({ Children }) => {
 
     return (
         <AuthContext.Provider value={contextData}>
-            {loading ? null : Children}
+            {loading ? null : children}
         </AuthContext.Provider>
     );
 };

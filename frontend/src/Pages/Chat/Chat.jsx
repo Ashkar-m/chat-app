@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import AuthContext, { baseUrl } from '../../context/AuthContext'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 const Chat = () => {
     const { user, authTokens } = useContext(AuthContext)

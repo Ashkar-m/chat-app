@@ -7,7 +7,7 @@ import Chat from "../Pages/Chat/Chat";
 
 const MyRoutes = () => {
   return (
-    <Router>
+    <>
 
         <Routes>
             <Route element={<Home />} path="/home" />
@@ -16,7 +16,7 @@ const MyRoutes = () => {
             <Route element={<Chat />} path="/chat" />
         </Routes>
       
-    </Router>
+    </>
   )
 }
 
