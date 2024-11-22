@@ -10,7 +10,7 @@ const Chat = () => {
 
     useEffect( () => {
         const fetchData = async() => {
-            await fetch(`${baseUrl}/room/${name}/${password}`,{
+            await fetch(`${baseUrl}/room/${name}/${password}/`,{
                 method : 'GET',
                 headers : {
                     "Authorization" : `Bearer ${authTokens.access}`
@@ -31,7 +31,7 @@ const Chat = () => {
         let data = new FormData()
         data.append("message", e.target.message.value)
         data.append("image", e.target.image.files[0])
-        await axios(`${baseUrl}/room/${name}/${password}`, {
+        await axios(`${baseUrl}/room/${name}/${password}/`, {
             method: 'POST',
             headers: {
                 "Authorization": `Bearer ${authTokens.access}`,

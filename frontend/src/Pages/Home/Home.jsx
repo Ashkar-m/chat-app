@@ -13,7 +13,7 @@ const HomePage = () => {
     }
     const CreateRoom = async (e) => {
         e.preventDefault()
-        await fetch(`${baseUrl}/room/`, {
+        await fetch(`${baseUrl}chat/room/`, {
             method: 'POST',
             headers: {
                 "Authorization": `Bearer ${authTokens.access}`
