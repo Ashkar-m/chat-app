@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 import json
 
 from .models import Chat, Room
+from .serializers import ChatSerializer
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
