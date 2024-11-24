@@ -67,8 +67,8 @@ const Register = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center py-6 px-4">
-            <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
+        <div className="h-screen w-screen bg-gray-100 flex items-center justify-center">
+            <div className="w-screen max-w-md bg-white rounded-lg shadow-lg p-6">
                 <Link
                     id="login"
                     to='/login'

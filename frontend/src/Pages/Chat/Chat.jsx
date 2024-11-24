@@ -101,6 +101,8 @@ const Chat = () => {
         fetchData();
         return () => clearInterval(timer)
     }, [])
+    console.log(messages);
+    
 
     const Send = async (e) => {
         e.preventDefault()
@@ -121,7 +123,7 @@ const Chat = () => {
     }
 
     return (
-        <div className="flex flex-col h-screen bg-gray-100">
+        <div className="flex flex-col h-screen w-screen bg-gray-100">
             <nav className="flex justify-between items-center bg-blue-600 text-white p-4">
                 <Link to='/' className="text-sm hover:underline">
                     <p>Back</p>
@@ -141,7 +143,7 @@ const Chat = () => {
                             {message.image && (
                                 <img
                                     className="mt-2 w-full h-auto max-h-40 object-cover rounded"
-                                    src={`http://localhost:8000${message.image}`}
+                                    src={`http://127.0.0.1:8000${message.image}`}
                                     loading="lazy"
                                     alt="Uploaded content"
                                 />

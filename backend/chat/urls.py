@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from rest_framework_simplejwt.views import(
     TokenObtainPairView,
@@ -18,5 +20,5 @@ urlpatterns = [
     path('room/', createRoom, name="createRoom"),
     path('room/<str:name>/<str:password>/', room, name="room"),
     path('user/create/', createUser, name='create-user'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_URL)
 

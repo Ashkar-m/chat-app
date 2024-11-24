@@ -183,6 +183,7 @@ export const AuthProvider = ({ children }) => {
         if (response.status === 200) {
             setAuthTokens(data);
             setUser(decodeJWT(data.access));
+            navigateTo('/home')
         } else {
             console.error("Login failed:", response);
         }
