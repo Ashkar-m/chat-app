@@ -125,7 +125,7 @@ const Chat = () => {
     return (
         <div className="flex flex-col h-screen w-screen bg-gray-100">
             <nav className="flex justify-between items-center bg-blue-600 text-white p-4">
-                <Link to='/' className="text-sm hover:underline">
+                <Link to='/login' className="text-sm hover:underline">
                     <p>Back</p>
                 </Link>
                 <h2 className="text-lg font-semibold">{name}</h2>
