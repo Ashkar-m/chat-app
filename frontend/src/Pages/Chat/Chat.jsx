@@ -140,14 +140,15 @@ const Chat = () => {
                         >
                             <h3 className="font-semibold">{message.user}</h3>
                             <p>{message.message}</p>
-                            {message.image && (
+                            {message.image ? (
                                 <img
                                     className="mt-2 w-full h-auto max-h-40 object-cover rounded"
                                     src={`http://127.0.0.1:8000${message.image}`}
                                     loading="lazy"
                                     alt="Uploaded content"
+                                    width={300} height={150}
                                 />
-                            )}
+                            ) : '' }
                         </div>
                     ))}
                 </div>
